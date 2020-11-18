@@ -7,6 +7,8 @@ Given a file containing text. Complete using only default collections:
     5) Find most common non ascii char for document
 """
 import re
+import string
+from collections import Counter
 from typing import List
 
 
@@ -36,11 +38,23 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
 
 
 def get_rarest_char(file_path: str) -> str:
-    ...
+    cnt = Counter()
+    with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
+        for line in fi:
+            for ch in line:
+                cnt[ch] += 1
+    # actually, it returns one of the rarest symbol, not all of them, but it's a requirement to return only one
+    return cnt.most_common()[-1][0]
 
 
 def count_punctuation_chars(file_path: str) -> int:
-    ...
+    count = 0
+    with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
+        for line in fi:
+            for ch in line:
+                if ch in string.punctuation:
+                    count += 1
+    return count
 
 
 def count_non_ascii_chars(file_path: str) -> int:
@@ -51,4 +65,6 @@ def get_most_common_non_ascii_char(file_path: str) -> str:
     ...
 
 
-print(get_longest_diverse_words("../tests/data.txt"))
+# print(get_longest_diverse_words("../tests/data.txt"))
+# print(get_rarest_char("../tests/data.txt"))
+# print(count_punctuation_chars("../tests/data.txt"))
