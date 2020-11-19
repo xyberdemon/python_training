@@ -58,13 +58,20 @@ def count_punctuation_chars(file_path: str) -> int:
 
 
 def count_non_ascii_chars(file_path: str) -> int:
-    ...
+    count = 0
+    with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
+        for line in fi:
+            for ch in line:
+                if not ch.isascii():
+                    count += 1
+    return count
 
 
 def get_most_common_non_ascii_char(file_path: str) -> str:
-    ...
-
-
-# print(get_longest_diverse_words("../tests/data.txt"))
-# print(get_rarest_char("../tests/data.txt"))
-# print(count_punctuation_chars("../tests/data.txt"))
+    cnt = Counter()
+    with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
+        for line in fi:
+            for ch in line:
+                if not ch.isascii():
+                    cnt[ch] += 1
+    return cnt.most_common()[0][0]

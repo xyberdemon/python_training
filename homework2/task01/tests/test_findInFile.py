@@ -1,6 +1,3 @@
-from collections.abc import Sequence
-
-import pytest
 from findInFile.findInFile import *
 
 
@@ -30,3 +27,13 @@ def test_get_rarest_char():
 def test_count_punctuation_chars():
     actual_result = count_punctuation_chars("../tests/data.txt")
     assert actual_result == 5308
+
+
+def test_count_non_ascii_chars():
+    actual_result = count_non_ascii_chars("../tests/data.txt")
+    assert actual_result == 2971
+
+
+def test_get_most_common_non_ascii_char():
+    actual_result = get_most_common_non_ascii_char("../tests/data.txt")
+    assert actual_result == "ä"
