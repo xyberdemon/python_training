@@ -1,4 +1,3 @@
-import pytest
 from funcCache.funcCache import cache, func
 
 
