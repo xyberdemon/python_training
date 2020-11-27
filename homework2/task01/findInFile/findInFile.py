@@ -37,22 +37,33 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
     return sorted(list_of_longest, key=len, reverse=True)
 
 
+def get_longest_diverse_words_dict_temp(file_path: str) -> List[str]:
+    # read all words from file to list
+    words = {}
+    with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
+        for line in fi:
+            inner_list = re.findall(r"[\w-]+", line)
+            for word in inner_list:
+                words.setdefault(len(word), set()).add(word)
+    return words
+
+
 def get_rarest_char(file_path: str) -> str:
     cnt = Counter()
     with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
         for line in fi:
-            for ch in line:
-                cnt[ch] += 1
+            cnt.update(line)
     # actually, it returns one of the rarest symbol, not all of them, but it's a requirement to return only one
     return cnt.most_common()[-1][0]
 
 
 def count_punctuation_chars(file_path: str) -> int:
     count = 0
+    punctuation_chars = set(string.punctuation)
     with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
         for line in fi:
             for ch in line:
-                if ch in string.punctuation:
+                if ch in punctuation_chars:
                     count += 1
     return count
 
@@ -71,7 +82,7 @@ def get_most_common_non_ascii_char(file_path: str) -> str:
     cnt = Counter()
     with open(file_path, encoding="unicode_escape", errors="backslashreplace") as fi:
         for line in fi:
-            for ch in line:
-                if not ch.isascii():
-                    cnt[ch] += 1
-    return cnt.most_common()[0][0]
+            cnt.update(line)
+    return Counter(
+        {x: count for x, count in cnt.items() if not x.isascii()}
+    ).most_common(1)[0][0]
